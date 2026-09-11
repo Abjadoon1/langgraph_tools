@@ -3,7 +3,7 @@ from pathlib import Path
 
 def find_file(filename):
     project_folder = Path(__file__).resolve().parent.parent
-    matches = list(project_folder.rglob(filename))
+    matches = list(project_folder.rglob(f"*{filename}*"))
 
     if not matches:
         return {"status": "not_found", "matches": []}

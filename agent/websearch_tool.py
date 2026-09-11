@@ -11,7 +11,6 @@ client = TavilyClient(api_key=tavily_key)
 
 def search_web(query, max_results=3):
     response = client.search(query=query, max_results=max_results)
-
     results = []
 
     for result in response.get("results", []):

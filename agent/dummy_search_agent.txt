@@ -1,0 +1,19 @@
+Agentic AI refers to the evolution of artificial intelligence 
+from passive chatbots into autonomous, reasoning-based systems 
+that can independently complete complex, multi-step tasks. 
+Traditional LLM applications operate in linear pipelines 
+(input → output), which limits their ability to handle
+ real-world challenges like error recovery, loop iterations, 
+ or dynamic decision-making. 
+ LangGraph, developed by the LangChain team, is a low-level 
+ orchestration framework specifically designed to build these 
+ sophisticated, stateful, multi-agent AI systems using a graph-based
+  structure.
+  Core Anatomy of a LangGraph ApplicationInstead of 
+  executing code in a straight line, LangGraph structures an agentic 
+  workflow as a cyclical graph. It breaks down an agent's 
+  "thinking process" into three fundamental building blocks:
+  Nodes: These represent the actual processing units or actions.
+   A node can be a Python function, a specific LLM call
+    (e.g., "Planner Agent"), 
+or a tool execution (e.g., "Web Search").
