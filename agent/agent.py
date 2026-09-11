@@ -81,23 +81,43 @@ Previous tool result: {history} Decide what to do next.
         result = tool.execute(**kwargs)
         return result
 
-    def run(self, message, max_steps = 5):
-        history = []
-        decision = self.ask_llm(message)
+    def agent_node(self, state: AgentState):
+        message = state['message']   
+        history = state['history']
 
-        while decision.action == 'tool' and len(history) < max_steps:
-            try:
-                tool_result=  self.tool_call(decision)
-            except Exception as e:
-                tool_result = f"Tool Error: {str(e)}"
-            history.append({'tool': decision.tool_name, 'result': tool_result})
-            decision = self.ask_llm(message, history)
+        decision = self.ask_llm(message, history)
+        return {'decision': decision}
 
-        if len(history) > max_steps:
-            return "Agent could not complete the task within the step limit."
-
+    def decision_route(self, state: AgentState):
+        decision = state['decision']
+        if state['steps'] >= 5:
+            return END
         if decision.action == 'answer':
-            return decision.answer
+            return END
+        elif decision.action == 'tool':
+            return "tool_node"
+        
+    def tool_node(self, state: AgentState):
+        decision = state['decision']
+        history = state['history'].copy()       
+        try:
+            tool_result=  self.tool_call(decision)
+        except Exception as e:
+            tool_result = f"Tool Error: {str(e)}"
+        history.append({'tool': decision.tool_name, 'result': tool_result})
 
-    
+        return {
+        "history": history,
+        "steps": state["steps"] + 1}
+
+
+    def build_graph(self):
+        graph = StateGraph(AgentState)
+        graph.add_node('agent_node' ,self.agent_node)
+        graph.add_node('tool_node' ,self.tool_node)
+        graph.set_entry_point('agent_node')
+        graph.add_conditional_edges('agent_node', self.decision_route)
+        graph.add_edge('tool_node', 'agent_node')
+        app = graph.compile()
+        return  app
         

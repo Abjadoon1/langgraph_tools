@@ -31,7 +31,16 @@ registry.register(file_search)
 
 message = input("Query: ")
 agent = Agent(registry)
-result = agent.run(message)
-print(result)
 
 
+app = agent.build_graph()
+
+initial_state = {
+    "message": message,
+    "decision": None,
+    "history": [],
+    "steps": 0
+}
+
+result = app.invoke(initial_state)
+print(result['decision'].answer)
