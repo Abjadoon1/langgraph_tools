@@ -5,7 +5,7 @@ class ToolRegistry:
     def register(self, tool):
         if tool.name in self.tools:
             raise ValueError("Tool already exists")
-        self.tools[tool.name]   = tool
+        self.tools[tool.name] = tool
 
     def get_tool(self, name):
         if name not in self.tools:
@@ -14,10 +14,13 @@ class ToolRegistry:
 
     def list_tools(self):
         return list(self.tools)
-    
+
     def get_tool_descriptions(self):
-        tool_descriptions = {name: {'description': tool_obj.description,
-                                    'parameters': tool_obj.parameters} 
-                                    for name, tool_obj in self.tools.items()}
+        tool_descriptions = {
+            name: {
+                "description": tool_obj.description,
+                "parameters": tool_obj.parameters,
+            }
+            for name, tool_obj in self.tools.items()
+        }
         return tool_descriptions
-    
