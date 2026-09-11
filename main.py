@@ -1,6 +1,7 @@
 from agent import Tool, ToolRegistry, Agent
 from agent.calculator import calculator
 from agent.file_search import find_file, search_file
+from agent.websearch_tool import search_web
 
 calculator_tool = Tool(
     name="calculator",
@@ -23,10 +24,18 @@ file_search_tool = Tool(
     parameters={"file_path": "str", "query": "str"},
 )
 
+websearch_tool = Tool(
+    name="search_web",
+    description="Search the web for current or external information that is not available from local files or existing knowledge",
+    function=search_web,
+    parameters={"query": "str"},
+)
+
 registry = ToolRegistry()
 registry.register(calculator_tool)
 registry.register(find_file_tool)
 registry.register(file_search_tool)
+registry.register(websearch_tool)
 
 message = input("Query: ")
 agent = Agent(registry)
@@ -37,4 +46,4 @@ app = agent.build_graph()
 initial_state = {"message": message, "decision": None, "history": [], "steps": 0}
 
 result = app.invoke(initial_state)
-print(result)
+print(print(result["history"]), result["decision"].answer)
