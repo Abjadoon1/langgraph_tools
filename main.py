@@ -1,18 +1,6 @@
 from agent import Tool, ToolRegistry, Agent
 from agent.calculator import calculator
-from pathlib import Path
-
-
-def search_file(file_path, query):
-    matches = []
-    with open(file_path, "r") as file:
-        for line in file:
-            if query.lower() in line.lower():
-                matches.append(line.strip())
-    if matches:
-        return matches
-    return "query not found in given file"
-
+from agent.file_search import find_file, search_file
 
 calculator_tool = Tool(
     name="calculator",
@@ -20,16 +8,25 @@ calculator_tool = Tool(
     function=calculator,
     parameters={"expression": "str"},
 )
-file_search = Tool(
+
+find_file_tool = Tool(
+    name="find_file",
+    description="Locate a file in local project folders when the exact file path is not known",
+    function=find_file,
+    parameters={"filename": "str"},
+)
+
+file_search_tool = Tool(
     name="search_file",
-    description="Search file for given query",
+    description="Search inside a known file path for text matching a query",
     function=search_file,
     parameters={"file_path": "str", "query": "str"},
 )
 
 registry = ToolRegistry()
 registry.register(calculator_tool)
-registry.register(file_search)
+registry.register(find_file_tool)
+registry.register(file_search_tool)
 
 message = input("Query: ")
 agent = Agent(registry)
