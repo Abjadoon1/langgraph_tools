@@ -46,4 +46,4 @@ app = agent.build_graph()
 initial_state = {"message": message, "decision": None, "history": [], "steps": 0}
 
 result = app.invoke(initial_state)
-print(print(result["history"]), result["decision"].answer)
+print(result["decision"].answer, result["history"])
